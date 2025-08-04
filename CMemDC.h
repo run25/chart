@@ -32,4 +32,18 @@ public:
 
     CMemDC* operator->() { return this; }
     operator CMemDC*() { return this; }
+
+void AlphaBlendFillRect(CDC* pDestDC, const CRect& rcDest, BYTE alpha, COLORREF fillColor)
+{
+    CBrush brush(fillColor);
+    FillRect(CRect(0, 0, rcDest.Width(), rcDest.Height()), &brush);
+
+    BLENDFUNCTION bf = {};
+    bf.BlendOp = AC_SRC_OVER;
+    bf.SourceConstantAlpha = alpha;
+    bf.AlphaFormat = 0;
+
+    pDestDC->AlphaBlend(rcDest.left, rcDest.top, rcDest.Width(), rcDest.Height(),
+                        this, 0, 0, rcDest.Width(), rcDest.Height(), bf);
+}
 };
